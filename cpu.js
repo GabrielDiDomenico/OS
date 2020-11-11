@@ -239,7 +239,6 @@ class Cpu {
 
     showCpuState(){
         console.log(this.state);
-        alert(this.state);
     }
 
     resetCpu(){
