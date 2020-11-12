@@ -1,7 +1,7 @@
 class Cpu {
     constructor(memSize) {
       this.pc = 0, this.acc = 0, this.state="normal", this.instructionMemory = Array(memSize), this.dataMemory = Array(memSize);
-      this.dataMemory.fill(0,0,this.dataMemory.length);
+      this.dataMemory.fill('_',0,this.dataMemory.length);
     }
   
     get memory() {
@@ -92,61 +92,16 @@ class Cpu {
         this.state = "Illegal instruction";
     }
 
-    saveState(){
-        function encode( s ) {
-            var out = [];
-            for ( var i = 0; i < s.length; i++ ) {
-                out[i] = s.charCodeAt(i);
-            }
-            return new Uint8Array( out );
-        }
-        
-        var data = encode( JSON.stringify({
-            pc: this.pc,
-            acc: this.acc,
-            state: this.state
-            
-        }, null, 3) );
-    
-        var blob = new Blob( [ data ], {
-            type: 'application/octet-stream'
-        });
-      
-        var link = document.createElement( 'a' );
-        link.setAttribute( 'href', URL.createObjectURL( blob ) );
-        link.setAttribute( 'download', 'data.json' );
-        
-        var event = document.createEvent( 'MouseEvents' );
-        event.initMouseEvent( 'click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-        link.dispatchEvent( event );
+    saveState(arq){
+        arq.push(this.pc);
+        arq.push(this.acc);
+        arq.push(this.state);
     }
 
-    loadState(pc,acc,state){
-        if(parseInt(pc) >= 0){
-            this.pc = pc;
-        }else{
-            alert("Invalid PC Value");
-            return;
-        }
-            
-        if(parseInt(acc) >= 0){
-            this.acc = acc;
-        }
-        else{
-            alert("Invalid ACC Value");
-            return;
-        }
-
-        if(state != "Illegal instruction" && state != "invalid access memory" && state != "normal"){
-            alert("Invalid State Value");
-            return;
-        }else{
-            this.state = state;
-        }
-            
-
-        location.reload();
-        alert("Load Finished");
+    loadState(arq){
+       this.pc = arq[0];
+       this.acc = arq[1];
+       this.state = arq[2];
     }
 
     resetState(){
@@ -169,6 +124,7 @@ class Cpu {
     }
 
     execute(line){
+        console.log(line);
         var params = line.split(' ');
 
         if(this.state != "normal"){
@@ -217,9 +173,9 @@ class Cpu {
 
     showDataMemory(i=-1){
         if(i < 0){
-            console.log(this.dataMemory);
+            $("#output").append("<p>"+this.dataMemory+"</p>");
         }else if(i < this.dataMemory.length){
-            console.log(this.dataMemory[i]);
+            $("#output").append("<p>"+this.dataMemory+"</p>");
         }else{
             this.memFail();
         }
@@ -228,9 +184,9 @@ class Cpu {
 
     showInstructionMemory(i=-1){
         if(i < 0){
-            console.log(this.instructionMemory);
+            $("#output").append("<p>"+this.instructionMemory+"</p>");
         }else if(i < this.instructionMemory.length){
-            console.log(this.instructionMemory[i]);
+            $("#output").append("<p>"+this.instructionMemory+"</p>");
         }else{
             this.memFail();
         }
@@ -238,7 +194,7 @@ class Cpu {
     }
 
     showCpuState(){
-        console.log(this.state);
+        $("#output").append("<p>"+this.state+"</p>");
     }
 
     resetCpu(){

@@ -5,12 +5,76 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
-        <div>
-            <input id="arquivo" type="file">
-        </div>
+        <p><t3>List of commands</t3></p>
+
+        <table border="1">
+            <tr>
+                <td><b>instrução</b></td>
+                <td><b>argumentos</b></td>
+                <td><b>descrição</b></td>
+            </tr>
+            <tr>
+                <td>CARGI</td>
+                <td>n</td>
+                <td>coloca o valor n no acumulador (A=n)</td>
+            </tr>
+            <tr>
+                <td>CARGM</td>
+                <td>n</td>
+                <td>coloca no acumulador o valor na posição n da memória de dados (A=M[n])</td>
+            </tr>
+            <tr>
+                <td>CARGX</td>
+                <td>n</td>
+                <td>coloca no acumulador o valor na posição que está na posição n da memória de dados (A=M[M[n]])</td>
+            </tr>
+            <tr>
+                <td>ARMM</td>
+                <td>n</td>
+                <td>coloca o valor do acumulador na posição n da memória de dados (M[n]=A)</td>
+            </tr>
+            <tr>
+                <td>ARMX</td>
+                <td>n</td>
+                <td>coloca o valor do acumulador posição que está na posição n da memória de dados (M[M[n]]=A)</td>
+            </tr>
+            <tr>
+                <td>SOMA</td>
+                <td>n</td>
+                <td>soma ao acumulador o valor no endereço n da memória de dados (A=A+M[n])</td>
+            </tr>
+            <tr>
+                <td>NEG</td>
+                <td></td>
+                <td>inverte o sinal do acumulador (A=-A)</td>
+            </tr>
+            <tr>
+                <td>DESVZ</td>
+                <td>n</td>
+                <td>se A vale 0, coloca o valor n no PC</td>
+            </tr>
+            <tr>
+                <td>PARA</td>
+                <td></td>
+                <td>Interrompe o programa</td>
+            </tr>
+        </table><br/><br/>
+
+        <p>Write on this box your program</p>
+        <textarea id="program" style="width: 88%;"></textarea><br/><br/>
+
+        
+        <button id="run">Run</button>
         <button id="saveState">Save State</button>
         <button id="loadState">Load State</button>
-        <div id="saida">
+        <button id="showState">Show State</button>
+        <button id="showInstruction">Show Instruction Memory</button>
+        <button id="showCurInstruction">Show Current Instruction</button>
+        <button id="showData">Show Data Memory</button>
+        <button id="clear">Clear Output</button>
+
+        <p>Output:</p>
+        <div id="output">
 
         </div>
         <script src="cpu.js"></script>

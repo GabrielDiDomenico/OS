@@ -1,4 +1,4 @@
-var program = [
+var default_program = [
     "CARGI 6",
     "ARMM 0",
     "CARGI 7",
@@ -20,16 +20,51 @@ var program = [
     "PARA"
 ]
 
-let cpu = new Cpu(50);
-cpu.loadProgram(program);
-cpu.run();
-cpu.showCpuState();
-cpu.showInstructionMemory();
-cpu.saveState();
-cpu.loadState();
-cpu.showDataMemory();
-instr = cpu.getCurrentInstruction();
-console.log(instr);
+$(document).ready(function() {
+
+    for (let line of default_program){
+        if(line == "PARA")
+            $("#program").append(line);
+        else
+            $("#program").append(line+",");
+    }
+    
+});
+
+
+var arq = [];
+
+var cpu = new Cpu(50);
+
+document.getElementById("run").onclick = function() {
+
+    var programText = $("#program").val();
+
+    var program = programText.split(',');
+
+    if(program[program.length - 1] !== "PARA"){
+        alert("Program without end");
+        return;
+    }
+        
+
+    cpu.loadProgram(program);
+    cpu.run();
+
+}
+document.getElementById("showState").onclick = function() {cpu.showCpuState();}
+document.getElementById("showInstruction").onclick = function() {cpu.showInstructionMemory();}
+document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+cpu.getCurrentInstruction()+"</p>");}
+document.getElementById("showData").onclick = function() {cpu.showDataMemory();}
+document.getElementById("saveState").onclick = function() {cpu.saveState(arq);}
+document.getElementById("loadState").onclick = function() {if(arq.length < 1) alert("Nothing to load");  else cpu.loadState(arq);}
+document.getElementById("clear").onclick = function() {$('#output').empty();}
+
+
+// 
+// cpu.showInstructionMemory();
+// 
+
 
 
 
