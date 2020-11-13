@@ -1,7 +1,7 @@
 class Cpu {
     constructor(memSize) {
       this.pc = 0, this.acc = 0, this.state="normal", this.instructionMemory = Array(memSize), this.dataMemory = Array(memSize);
-      this.dataMemory.fill('_',0,this.dataMemory.length);
+     // this.dataMemory.fill('_',0,this.dataMemory.length);
     }
   
     get memory() {
@@ -106,7 +106,7 @@ class Cpu {
 
     resetState(){
         this.pc = 0, this.acc = 0, this.state="normal", this.instructionMemory = Array(this.instructionMemory.length), this.dataMemory = Array(this.dataMemory.length);
-        this.dataMemory.fill(0,0,this.dataMemory.length);
+        //this.dataMemory.fill(0,0,this.dataMemory.length);
     }
 
     run(n=0){
@@ -123,8 +123,12 @@ class Cpu {
         }
     }
 
+    runLine(){
+        this.execute(this.getCurrentInstruction());
+    }
+
+
     execute(line){
-        console.log(line);
         var params = line.split(' ');
 
         if(this.state != "normal"){
@@ -194,6 +198,8 @@ class Cpu {
     }
 
     showCpuState(){
+        $("#output").append("<p>"+this.pc+"</p>");
+        $("#output").append("<p>"+this.acc+"</p>");
         $("#output").append("<p>"+this.state+"</p>");
     }
 

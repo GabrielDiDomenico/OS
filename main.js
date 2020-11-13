@@ -37,7 +37,7 @@ var arq = [];
 var cpu = new Cpu(50);
 
 document.getElementById("run").onclick = function() {
-
+    cpu = new Cpu(50);
     var programText = $("#program").val();
 
     var program = programText.split(',');
@@ -52,18 +52,26 @@ document.getElementById("run").onclick = function() {
     cpu.run();
 
 }
+document.getElementById("stepForward").onclick = function() {
+
+    var programText = $("#program").val();
+
+    var program = programText.split(',');
+        
+
+    cpu.loadProgram(program);
+    cpu.runLine();
+
+}
 document.getElementById("showState").onclick = function() {cpu.showCpuState();}
 document.getElementById("showInstruction").onclick = function() {cpu.showInstructionMemory();}
 document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+cpu.getCurrentInstruction()+"</p>");}
 document.getElementById("showData").onclick = function() {cpu.showDataMemory();}
 document.getElementById("saveState").onclick = function() {cpu.saveState(arq);}
 document.getElementById("loadState").onclick = function() {if(arq.length < 1) alert("Nothing to load");  else cpu.loadState(arq);}
+document.getElementById("reset").onclick = function() {cpu.resetState(); cpu.resetCpu();}
 document.getElementById("clear").onclick = function() {$('#output').empty();}
 
-
-// 
-// cpu.showInstructionMemory();
-// 
 
 
 
