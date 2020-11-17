@@ -54,9 +54,19 @@
                 <td>se A vale 0, coloca o valor n no PC</td>
             </tr>
             <tr>
+                <td>GRAVA</td>
+                <td>n</td>
+                <td>pede ao SO gravar o valor do acumulador no dispositivo de E/S n</td>
+            </tr>
+            <tr>
+                <td>LE</td>
+                <td>n</td>
+                <td>pede ao SO para fazer a leitura de um dado (inteiro) do dispositivo de E/S n; o dado será colocado no acumulador</td>
+            </tr>
+            <tr>
                 <td>PARA</td>
                 <td></td>
-                <td>Interrompe o programa</td>
+                <td>pede ao SO para terminar a execução do programa (como exit)</td>
             </tr>
         </table><br/><br/>
 
@@ -80,6 +90,7 @@
 
         </div>
         <script src="cpu.js"></script>
+        <script src="controller.js"></script>
         <script src="main.js"></script>
     </body>
 </html>

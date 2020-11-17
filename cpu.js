@@ -123,56 +123,70 @@ class Cpu {
         }
     }
 
-    runLine(){
-        this.execute(this.getCurrentInstruction());
-    }
 
 
     execute(line){
-        var params = line.split(' ');
+        if(line != undefined){
+            var params = line.split(" ");
 
-        if(this.state != "normal"){
-            return false;
-        }
-
-        if(params.length == 1){
-            if(line == "NEG"){
-                this.neg();
-                return true;
-            }else{
-                this.illegalInstruction();
+            if(this.state != "normal"){
+                console.log(this.instructionMemory[this.pc]);
                 return false;
             }
-        }
 
-        if(params.length == 2){
-            if(params[0] == "CARGI"){
-                this.cargi(params[1]);
-                return true;
-            }else if(params[0] == "CARGM"){
-                this.cargm(params[1]);
-                return true;
-            }else if(params[0] == "CARGX"){
-                this.cargx(params[1]);
-                return true;
-            }else if(params[0] == "ARMM"){
-                this.armm(params[1]);
-                return true;
-            }else if(params[0] == "ARMX"){
-                this.armx(params[1]);
-                return true;
-            }else if(params[0] == "SOMA"){
-                this.soma(params[1]);
-                return true;
-            }else if(params[0] == "DESVZ"){
-                this.desvz(params[1]);
-                return true;
+            if(params.length == 1){
+                if(line == "NEG"){
+                    this.neg();
+                    return true;
+                }else{
+                    this.illegalInstruction();
+                    return false;
+                }
+            }
+
+            if(params.length == 2){
+                if(params[1] == ""){
+                    this.illegalInstruction();
+                    return false;
+                }else if(params[0] == "CARGI"){
+                    this.cargi(params[1]);
+                    return true;
+                }else if(params[0] == "CARGM"){
+                    this.cargm(params[1]);
+                    return true;
+                }else if(params[0] == "CARGX"){
+                    this.cargx(params[1]);
+                    return true;
+                }else if(params[0] == "ARMM"){
+                    this.armm(params[1]);
+                    return true;
+                }else if(params[0] == "ARMX"){
+                    this.armx(params[1]);
+                    return true;
+                }else if(params[0] == "SOMA"){
+                    this.soma(params[1]);
+                    return true;
+                }else if(params[0] == "DESVZ"){
+                    this.desvz(params[1]);
+                    return true;
+                }else{
+                    this.illegalInstruction();
+                    return false;
+                }
+                
+            }
+        
+        }else{
+
+            if(this.state == "normal"){
+                return false;
             }else{
                 this.illegalInstruction();
                 return false;
             }
             
         }
+        
     }
 
     showDataMemory(i=-1){
@@ -205,6 +219,7 @@ class Cpu {
 
     resetCpu(){
         this.state = "normal";
+        this.pc++;
     }
 
     getCurrentInstruction(){
