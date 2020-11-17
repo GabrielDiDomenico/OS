@@ -2,25 +2,31 @@ class Controller {
     constructor(memSize) {
         this.cpuState="normal";
         this.cpu = new Cpu(memSize);
-        this.output;
+        this.response = this.cpu.state;
     }
 
-    start(program){
+    callCPU(program, file){
         this.cpu.loadProgram(program);
         this.cpu.run();
-        // if(this.cpu.getCurrentInstruction() == "PARA"){
-        //     this.output = "exit"
-        // }
-        // if(this.cpu.getCurrentInstruction() == "LE"){
+        if(this.cpu.state == "Illegal instruction"){
+            if(this.cpu.getCurrentInstruction() == "PARA"){
+                this.response = "exit"
+            }else if(this.cpu.getCurrentInstruction() == "LE"){
+                
+            }else if(this.cpu.getCurrentInstruction() == "GRAVA"){
+    
+            }else{
+                this.response = this.cpu.state;
+            }
+        }else{
+            this.response = this.cpu.state;
+        }
+        
 
-        // }
-        // if(this.cpu.getCurrentInstruction() == "LE"){
-
-        // }
     }
 
-    getOutput(){
-        return this.output;
+    getResponse(){
+        return this.response;
     }
 
     getLastLine(){

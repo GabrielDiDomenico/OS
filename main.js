@@ -32,18 +32,16 @@ $(document).ready(function() {
 });
 
 
-var arq = [];
-
-var controller = new Controller(50);
+var file = [];
+var os = new OperatingSystem(50);
 
 document.getElementById("run").onclick = function() {
-
+    
     var programText = $("#program").val();
 
     var program = programText.split(',');
-    console.log(program)
     
-    controller.start(program);
+    os.start(program, file);
 
 }
 // document.getElementById("stepForward").onclick = function() {
@@ -57,13 +55,14 @@ document.getElementById("run").onclick = function() {
 //     cpu.runLine();
 
 // }
-document.getElementById("showState").onclick = function() {controller.cpu.showCpuState();}
-document.getElementById("showInstruction").onclick = function() {controller.cpu.showInstructionMemory();}
-document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+controller.getLastLine()+"</p>");}
-document.getElementById("showData").onclick = function() {controller.cpu.showDataMemory();}
-document.getElementById("saveState").onclick = function() {controller.cpu.saveState(arq);}
-document.getElementById("loadState").onclick = function() {if(arq.length < 1) alert("Nothing to load");  else controller.cpu.loadState(arq);}
-document.getElementById("reset").onclick = function() {controller.cpu.resetState(); controller.cpu.resetCpu();}
+document.getElementById("showState").onclick = function() {$("#output").append("<p>State: "+os.controller.getResponse()+"</p>");}
+document.getElementById("showRegister").onclick = function() {$("#output").append("<p>Accumulator: "+os.controller.cpu.acc+"</p><p>PC: "+os.controller.cpu.pc+"</p>");}
+document.getElementById("showInstruction").onclick = function() {os.controller.cpu.showInstructionMemory();}
+document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+os.controller.getLastLine()+"</p>");}
+document.getElementById("showData").onclick = function() {os.controller.cpu.showDataMemory();}
+document.getElementById("saveState").onclick = function() {os.controller.cpu.saveState(arq);}
+document.getElementById("loadState").onclick = function() {if(arq.length < 1) alert("Nothing to load");  else os.controller.cpu.loadState(arq);}
+document.getElementById("reset").onclick = function() {os.controller.cpu.resetState(); os.controller.cpu.resetCpu();}
 document.getElementById("clear").onclick = function() {$('#output').empty();}
 
 
