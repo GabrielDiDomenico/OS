@@ -17,6 +17,9 @@ var default_program = [
     "CARGI 0",
     "DESVZ 6",
     "CARGM 2",
+    "LE",
+    "CARGI 0",
+    "GRAVA",
     "PARA"
 ]
 
@@ -32,7 +35,7 @@ $(document).ready(function() {
 });
 
 
-var file = [];
+var file = [10];
 var os = new OperatingSystem(50);
 
 document.getElementById("run").onclick = function() {
@@ -43,26 +46,18 @@ document.getElementById("run").onclick = function() {
     
     os.start(program, file);
 
+
 }
-// document.getElementById("stepForward").onclick = function() {
 
-//     var programText = $("#program").val();
 
-//     var program = programText.split(',');
-        
-
-//     cpu.loadProgram(program);
-//     cpu.runLine();
-
-// }
-document.getElementById("showState").onclick = function() {$("#output").append("<p>State: "+os.controller.getResponse()+"</p>");}
-document.getElementById("showRegister").onclick = function() {$("#output").append("<p>Accumulator: "+os.controller.cpu.acc+"</p><p>PC: "+os.controller.cpu.pc+"</p>");}
-document.getElementById("showInstruction").onclick = function() {os.controller.cpu.showInstructionMemory();}
-document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+os.controller.getLastLine()+"</p>");}
-document.getElementById("showData").onclick = function() {os.controller.cpu.showDataMemory();}
-document.getElementById("saveState").onclick = function() {os.controller.cpu.saveState(arq);}
-document.getElementById("loadState").onclick = function() {if(arq.length < 1) alert("Nothing to load");  else os.controller.cpu.loadState(arq);}
-document.getElementById("reset").onclick = function() {os.controller.cpu.resetState(); os.controller.cpu.resetCpu();}
+document.getElementById("showState").onclick = function() {$("#output").append("<p>State: "+os.getOutput()+"</p>");}
+document.getElementById("showRegister").onclick = function() {$("#output").append("<p>Accumulator: "+os.cpu.acc+"</p><p>PC: "+os.cpu.pc+"</p>");}
+document.getElementById("showInstruction").onclick = function() {os.cpu.showInstructionMemory();}
+document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+os.getLastLine()+"</p>");}
+document.getElementById("showData").onclick = function() {os.cpu.showDataMemory();}
+document.getElementById("saveState").onclick = function() {os.cpu.saveState(arq);}
+document.getElementById("loadState").onclick = function() {if(file.length < 1) alert("Nothing to load");  else os.cpu.loadState(arq);}
+document.getElementById("reset").onclick = function() {os.cpu.resetState();}
 document.getElementById("clear").onclick = function() {$('#output').empty();}
 
 

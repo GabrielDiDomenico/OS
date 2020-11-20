@@ -3,10 +3,7 @@ class Cpu {
       this.pc = 0, this.acc = 0, this.state="normal", this.instructionMemory = Array(memSize), this.dataMemory = Array(memSize);
      // this.dataMemory.fill('_',0,this.dataMemory.length);
     }
-  
-    get memory() {
-        return this.dataMemory.length;
-    }  
+
     
     cargi(value) {  
         this.acc = parseInt(value);
@@ -110,6 +107,7 @@ class Cpu {
     }
 
     run(n=0){
+        console.log(this.getCurrentInstruction());
         var run = true;
         if(n<=0){
             while(run){
@@ -130,7 +128,6 @@ class Cpu {
             var params = line.split(" ");
 
             if(this.state != "normal"){
-                console.log(this.instructionMemory[this.pc]);
                 return false;
             }
 
@@ -211,11 +208,6 @@ class Cpu {
 
     }
 
-    showCpuState(){
-        $("#output").append("<p>"+this.pc+"</p>");
-        $("#output").append("<p>"+this.acc+"</p>");
-        $("#output").append("<p>"+this.state+"</p>");
-    }
 
     resetCpu(){
         this.state = "normal";
