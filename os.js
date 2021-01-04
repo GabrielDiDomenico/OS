@@ -13,11 +13,11 @@ class OperatingSystem{
         
         this.ctrlrReturn = this.controller.callCPU(this.cpu);
 
-        if(this.ctrlrReturn == "LE"){
-            this.readFile(file);
+        if(this.ctrlrReturn.split(" ")[0] == "LE"){
+            this.readFile(file, this.ctrlrReturn.split(" ")[1]);
             this.start(program,file);
-        }else if(this.ctrlrReturn == "GRAVA"){
-            this.writeFile(file);
+        }else if(this.ctrlrReturn.split(" ")[0] == "GRAVA"){
+            this.writeFile(file, this.ctrlrReturn.split(" ")[1]);
             this.start(program,file);
         }else if(this.ctrlrReturn == "exit"){
             this.output = "exit";
@@ -28,14 +28,14 @@ class OperatingSystem{
         
     }
 
-    readFile(file){
-        this.cpu.acc = file[0];
+    readFile(file,n){
+        this.cpu.acc = file[n];
         this.cpu.pc++;
         this.cpu.state = "normal";
     }
 
-    writeFile(file){
-        file[0] = this.cpu.acc;
+    writeFile(file,n){
+        file[n] = this.cpu.acc;
         this.cpu.state = "normal";
         this.cpu.pc++;
     }
@@ -52,4 +52,5 @@ class OperatingSystem{
         }
         
     }
+
 }

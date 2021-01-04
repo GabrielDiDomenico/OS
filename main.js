@@ -29,7 +29,7 @@ $(document).ready(function() {
         if(line == "PARA")
             $("#program").append(line);
         else
-            $("#program").append(line+",");
+            $("#program").append(line+"\n");
     }
     
 });
@@ -42,7 +42,7 @@ document.getElementById("run").onclick = function() {
     
     var programText = $("#program").val();
 
-    var program = programText.split(',');
+    var program = programText.split('\n');
     
     os.start(program, file);
 
@@ -57,7 +57,7 @@ document.getElementById("showCurInstruction").onclick = function() {$("#output")
 document.getElementById("showData").onclick = function() {os.cpu.showDataMemory();}
 document.getElementById("saveState").onclick = function() {os.cpu.saveState(arq);}
 document.getElementById("loadState").onclick = function() {if(file.length < 1) alert("Nothing to load");  else os.cpu.loadState(arq);}
-document.getElementById("reset").onclick = function() {os.cpu.resetState();}
+document.getElementById("reset").onclick = function() { location.reload();}
 document.getElementById("clear").onclick = function() {$('#output').empty();}
 
 

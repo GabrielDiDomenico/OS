@@ -10,10 +10,10 @@ class Controller {
             if(cpu.state == "Illegal instruction"){
                 if(cpu.getCurrentInstruction() == "PARA"){
                     return "exit"
-                }else if(cpu.getCurrentInstruction() == "LE"){
-                    return "LE";
-                }else if(cpu.getCurrentInstruction() == "GRAVA"){
-                    return "GRAVA";
+                }else if(cpu.getCurrentInstruction().split(" ")[0] == "LE"){
+                    return "LE "+cpu.getCurrentInstruction().split(" ")[1];
+                }else if(cpu.getCurrentInstruction().split(" ")[0] == "GRAVA"){
+                    return "GRAVA "+cpu.getCurrentInstruction().split(" ")[1];
                 }else{
                     return cpu.state;
                 }
