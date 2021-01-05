@@ -1,11 +1,12 @@
 class Timer{
     constructor() {
         this.timer=0;
-        this.interruptions=[];
+        this.interruptions=[[0,0,0]];
     }
 
     addTimer(){
         this.timer++;
+        
     }
 
     showTimer(){
@@ -13,14 +14,27 @@ class Timer{
     }
 
     showInterruption(){
-        aux = this.interruption[0];
-        this.interruption.shift();
-        return aux[2];
+        
+        if(this.interruptions[0][1]==this.timer){
+            var aux = [];
+            aux = this.interruptions[0];
+            this.interruptions.shift();
+            this.interruptions.push([0,0,0]);
+  
+            return aux[2];
+        }else{ 
+            return "F";
+        }
 
     }
 
-    addInterruption(type, time, code){
+    setInterruption(type, time, code){
+       
         this.interruptions.push([type,time,code]);
+        if(this.interruptions[0][0] == 0){
+            this.interruptions.shift();
+        }
+ 
     }
 
 }

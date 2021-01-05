@@ -17,9 +17,9 @@ var default_program = [
     "CARGI 0",
     "DESVZ 6",
     "CARGM 2",
-    "LE",
+    "LE 0",
     "CARGI 0",
-    "GRAVA",
+    "GRAVA 0",
     "PARA"
 ]
 
