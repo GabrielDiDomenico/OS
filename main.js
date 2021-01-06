@@ -1,4 +1,4 @@
-var default_program = [
+var program1 = [
     "CARGI 6",
     "ARMM 0",
     "CARGI 7",
@@ -19,37 +19,51 @@ var default_program = [
     "CARGM 2",
     "LE 0",
     "CARGI 0",
-    "GRAVA 0",
+    "GRAVA 1",
+    "PARA"
+]
+var program2 = [
+    "CARGI 0",
+    "ARMM 0",
+    "LE 0",
+    "ARMM 1",
+    "CARGI 1",
+    "NEG",
+    "ARMM 2",
+    "CARGM 0",
+    "SOMA 1",
+    "ARMM 0",
+    "CARGM 1",
+    "SOMA 2",
+    "ARMM 1",
+    "DESVZ 16",
+    "CARGI 0",
+    "DESVZ 7",
+    "CARGM 0",
+    "GRAVA 1",
+    "PARA"
+]
+var program3 = [
+    "LE 0",
+    "ARMM 0",
+    "LE 1",
+    "SOMA 0",
+    "GRAVA 2",
     "PARA"
 ]
 
-$(document).ready(function() {
+var jobs = [
+    [program1, program1.length, [[0,6]], [[1,6]], 0, 0.5],
+    [program2, program2.length, [[1,6]], [[1,6]], 0, 0.5],
+    [program3, program3.length, [[0,6],[1,6]],[[2,6]], 0, 0.5]
+]
 
-    for (let line of default_program){
-        if(line == "PARA")
-            $("#program").append(line);
-        else
-            $("#program").append(line+"\n");
-    }
-    
-});
+console.log(jobs);
 
+var files = [10];
+var os = new OperatingSystem(50,jobs,files);
 
-var file = [10];
-var os = new OperatingSystem(50);
-
-document.getElementById("run").onclick = function() {
-    
-    var programText = $("#program").val();
-
-    var program = programText.split('\n');
-    
-    os.start(program, file);
-
-
-}
-
-
+document.getElementById("run").onclick = function() {os.start();}
 document.getElementById("showState").onclick = function() {$("#output").append("<p>State: "+os.getOutput()+"</p>");}
 document.getElementById("showRegister").onclick = function() {$("#output").append("<p>Accumulator: "+os.cpu.acc+"</p><p>PC: "+os.cpu.pc+"</p>");}
 document.getElementById("showInstruction").onclick = function() {os.cpu.showInstructionMemory();}

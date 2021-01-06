@@ -1,5 +1,5 @@
 class Controller {
-    constructor(memSize) {
+    constructor() {
         this.cpuState="normal";
         
     }
@@ -30,6 +30,7 @@ class Controller {
                     return cpu.state;
                 }
             }else if(cpu.state == "normal"){
+
                 cpu.run(1);
             }else{
                 return cpu.state;
