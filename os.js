@@ -10,31 +10,32 @@ class OperatingSystem{
         this.files = files;
         this.fileItrs = Array(this.files.length)
         this.fileItrs.fill(0,0,this.files.length);
-        this.timer.setInterruption("p", 15, ["next",-1]);
+        this.timer.setInterruption(1, 15, ["next",-1]);
         this.quantum = 0;
         this.maxQuantum = maxQuantum;
         this.sch = new Scheduler(jobs,files,this.fileItrs);
+        
     }
 
     start(){
-        
+        console.log(this.sch.processTable);
         if(this.cpu.instructionMemory[0]==undefined){
             this.cpu.loadProgram(this.jobs[0][0]);
         }
-        
+        console.log(this.timer);
         this.ctrlrReturn = this.controller.callCPU(this.cpu, this.timer, this.quantum);
-        console.log(this.ctrlrReturn[0]);
+        console.log(this.ctrlrReturn[0][0]);
         if(this.cpu.state == "Illegal instruction"){
-            if(this.ctrlrReturn[0].split(" ")[0] == "LE"){
+            if(this.ctrlrReturn[0][0].split(" ")[0] == "LE"){
                 console.log("entro0");
                 this.cpu.state = "sleep";
-                this.timer.setInterruption("a", this.timer.timer+this.jobs[this.sch.currentJob][2], ["LE "+this.ctrlrReturn.split(" ")[1],this.sch.currentJob]);
+                this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][2], ["LE "+this.ctrlrReturn[0][0].split(" ")[1],this.sch.currentJob]);
                 this.callScheduler();
                 this.quantum = 0;
                 this.start();
-            }else if(this.ctrlrReturn.split(" ")[0] == "GRAVA"){
+            }else if(this.ctrlrReturn[0][0].split(" ")[0] == "GRAVA"){
                 this.cpu.state = "sleep";
-                this.timer.setInterruption("a", this.timer.timer+this.jobs[this.sch.currentJob][3], ["GRAVA "+this.ctrlrReturn.split(" ")[1],this.sch.currentJob]);
+                this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][3], ["GRAVA "+this.ctrlrReturn[0][0].split(" ")[1],this.sch.currentJob]);
                 this.callScheduler();
                 this.quantum = 0;
                 this.start();
@@ -55,9 +56,7 @@ class OperatingSystem{
         }else if(this.ctrlrReturn == "next"){
             console.log("entro2");
             this.cpu.state = "sleep";
-           
             this.callScheduler();
-            
             this.quantum = 0;
             this.start();
         }else if(this.ctrlrReturn == "next1"){
@@ -65,22 +64,23 @@ class OperatingSystem{
             
             this.quantum = 0;
             this.start();
+        }else if(this.ctrlrReturn == "force_exit"){
+            this.output = "exit";
         }else{
             
             var aux = this.ctrlrReturn; // To be able to use split
-            
-            if(aux[0].split(" ")[0] == "LE"){
-                
-                this.callScheduler(aux[1]);
-                console.log("entro3");
+            console.log(aux[0][1]);
+            if(aux[0][0].split(" ")[0] == "LE"){
+                this.callScheduler(aux[0][1]);
+                console.log("entro3 - "+aux[0][1]);
                 this.quantum = 0;
-                this.readFile(this.files, aux[0].split(" ")[1]);
-                // this.start();
-            }else if(aux[0].split(" ")[0] == "GRAVA"){
+                this.readFile(this.files, aux[0][0].split(" ")[1]);
+                this.start();
+            }else if(aux[0][0].split(" ")[0] == "GRAVA"){
                 console.log("entro4");
-                this.callScheduler(aux[1]);
+                this.callScheduler(aux[0][1]);
                 this.quantum = 0;
-                this.writeFile(this.files, aux[0].split(" ")[1]);
+                this.writeFile(this.files, aux[0][0].split(" ")[1]);
                 this.start();
             }
         }
@@ -90,6 +90,9 @@ class OperatingSystem{
     }
 
     callScheduler(idProcessInt=-1){
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        console.log(this.sch.processTable);
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         let auxProc = [];
         var auxQuantum = 0;
         auxQuantum = this.quantum;
@@ -101,6 +104,7 @@ class OperatingSystem{
             this.output = "exit";
         }else if(auxProc == "sleep"){
             this.cpu.state = "sleep";
+            console.log("entrortortortort")
             this.start();
         }else{
             this.loadProcess(auxProc);
@@ -109,6 +113,9 @@ class OperatingSystem{
     }
 
     saveProcess(acc,pc,state,files,fracQuantum,fileItrs,dataMem){
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        console.log(this.sch.processTable);
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         this.sch.processTable[this.sch.currentJob][0] = parseInt(acc);
         this.sch.processTable[this.sch.currentJob][1] = parseInt(pc);
         this.sch.processTable[this.sch.currentJob][2] = state;

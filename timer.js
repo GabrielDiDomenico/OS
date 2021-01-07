@@ -1,8 +1,9 @@
 class Timer{
     constructor(periodicTime) {
         this.timer=0;
-        this.interruptions=[["0",0,[]]];
+        this.interruptions=[[0,0,[]]];
         this.pTime = periodicTime;
+        console.log(this.interruptions);
     }
 
     addTimer(){
@@ -15,14 +16,15 @@ class Timer{
     }
 
     showInterruption(){
+        console.log(this.interruptions)
         var i=0;
         while(this.interruptions.length > i){
-            if(this.interruptions[i][0] == "a"){
+            if(this.interruptions[i][0] == 0){
                 if(this.interruptions[i][1]==this.timer){
                     var aux = [];
                     aux = this.interruptions[i];
                     this.interruptions.shift();
-                    this.interruptions.push([0,0,[]]);
+                    
         
                     return aux[2];
                 }

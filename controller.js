@@ -5,13 +5,15 @@ class Controller {
     }
 
     callCPU(cpu, timer, quantum){
-        
+        console.log(timer);
         while(true){
             if(quantum == this.mq){
                 return "next1";
             }
+            if(timer.timer==300){
+                return "force_exit";
+            }
             var result=[];
-            console.log(timer.interruptions);
             timer.addTimer();
             result.push(timer.showInterruption());
             console.log(result);
@@ -37,10 +39,10 @@ class Controller {
                     return "exit";
                 }else if(cpu.getCurrentInstruction().split(" ")[0] == "LE"){
 
-                    return "LE "+cpu.getCurrentInstruction().split(" ")[1];
+                    return [["LE "+cpu.getCurrentInstruction().split(" ")[1],0]];
                 }else if(cpu.getCurrentInstruction().split(" ")[0] == "GRAVA"){
 
-                    return "GRAVA "+cpu.getCurrentInstruction().split(" ")[1];
+                    return [["GRAVA "+cpu.getCurrentInstruction().split(" ")[1],0]];
                 }else{
 
                     return cpu.state;

@@ -9,12 +9,27 @@ class Scheduler{
         for(let i=0;i<this.jobs.length;i++){
             this.processTable.push([0,0,"normal",files,jobs[i],fileItrs, Array(50)]);
         }
+        console.log(this.processTable);
     }
 
     getProcess(idProcess){
-        if(idProcess>0){
+        if(idProcess>=0){
+            console.log("========================");
+            console.log(this.processTable);
+            console.log("========================");
+            console.log(this.currentJob);
+            console.log("========================--------------------------");
+      
+            if(this.processTable[idProcess][2]=="sleep"){
+                this.processTable[idProcess][2] = "normal";
+            }
             return this.processTable[idProcess];
         }
+        console.log("========================");
+        console.log(this.processTable);
+        console.log("========================");
+        console.log(this.currentJob);
+        console.log("========================");
         var auxSleep=0;
         for(let i=0;i<this.processTable.length;i++){
             if(this.processTable[i][2] == "sleep"){
@@ -54,7 +69,7 @@ class Scheduler{
             }
         }  
         console.log("========================");
-        console.log(this.processTable[this.currentJob]);
+        console.log(this.processTable);
         console.log("========================");
         console.log(this.currentJob);
         console.log("========================");
