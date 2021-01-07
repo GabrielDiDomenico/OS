@@ -49,19 +49,22 @@ var program3 = [
     "LE 1",
     "SOMA 0",
     "GRAVA 2",
+    "DESVZ 8",
+    "CARGI 0",
+    "DESVZ 0",
     "PARA"
 ]
 
 var jobs = [
-    [program1, program1.length, [[0,6]], [[1,6]], 0, 0.5],
-    [program2, program2.length, [[1,6]], [[1,6]], 0, 0.5],
-    [program3, program3.length, [[0,6],[1,6]],[[2,6]], 0, 0.5]
+    [program1, program1.length, 5, 5, 0, 0.5],
+    [program2, program2.length, 5, 5, 0, 0.5],
+    [program3, program3.length, 5, 5, 0, 0.5]
 ]
 
 console.log(jobs);
 
-var files = [10];
-var os = new OperatingSystem(50,jobs,files);
+var files = [[10,20,30,0],[100,200,0],[0],[0],[0],[0]];
+var os = new OperatingSystem(50,jobs,files,30);
 
 document.getElementById("run").onclick = function() {os.start();}
 document.getElementById("showState").onclick = function() {$("#output").append("<p>State: "+os.getOutput()+"</p>");}

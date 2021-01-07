@@ -1,38 +1,56 @@
 class Controller {
-    constructor() {
-        this.cpuState="normal";
-        
+    constructor(maxQuantum) {
+
+        this.mq = maxQuantum;
     }
 
-    callCPU(cpu, timer){
+    callCPU(cpu, timer, quantum){
         
         while(true){
-            var result
-  
+            if(quantum == this.mq){
+                return "next1";
+            }
+            var result=[];
+            console.log(timer.interruptions);
             timer.addTimer();
-            result = timer.showInterruption();
-            if(result!="F"){  
+            result.push(timer.showInterruption());
+            console.log(result);
+            
+             
+            if(result[0][0]=="next"){   
+                return result[0][0];
+            }else if(result[0][0]!=undefined && result[0][0]!="F"){
+                
                 return result;
             }
             if(cpu.state == "sleep"){
+                
                 continue;
             }
-            cpu.run(1);
             
+            cpu.run(1);
+           
             if(cpu.state == "Illegal instruction"){
+               
                 if(cpu.getCurrentInstruction() == "PARA"){
+
                     return "exit";
                 }else if(cpu.getCurrentInstruction().split(" ")[0] == "LE"){
+
                     return "LE "+cpu.getCurrentInstruction().split(" ")[1];
                 }else if(cpu.getCurrentInstruction().split(" ")[0] == "GRAVA"){
+
                     return "GRAVA "+cpu.getCurrentInstruction().split(" ")[1];
                 }else{
+
                     return cpu.state;
                 }
             }else if(cpu.state == "normal"){
-
+                
+                quantum++;
                 cpu.run(1);
             }else{
+                
                 return cpu.state;
             }
         }
