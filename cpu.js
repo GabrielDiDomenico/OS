@@ -96,6 +96,7 @@ class Cpu {
     }
 
     loadState(arq){
+        alert(arq)
        this.pc = arq[0];
        this.acc = arq[1];
        this.state = arq[2];

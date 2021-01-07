@@ -14,22 +14,13 @@ class Scheduler{
 
     getProcess(idProcess){
         if(idProcess>=0){
-            console.log("========================");
-            console.log(this.processTable);
-            console.log("========================");
-            console.log(this.currentJob);
-            console.log("========================--------------------------");
       
             if(this.processTable[idProcess][2]=="sleep"){
                 this.processTable[idProcess][2] = "normal";
             }
             return this.processTable[idProcess];
         }
-        console.log("========================");
-        console.log(this.processTable);
-        console.log("========================");
-        console.log(this.currentJob);
-        console.log("========================");
+
         var auxSleep=0;
         for(let i=0;i<this.processTable.length;i++){
             if(this.processTable[i][2] == "sleep"){
@@ -49,7 +40,7 @@ class Scheduler{
                 continue;
             }
             if(this.processTable[i][2] == "sleep"){
-                this.processTable[i][4][5] = 1;
+                
                 continue;
             }
             if(this.processTable[i][4][5] == 0){
@@ -68,11 +59,7 @@ class Scheduler{
                 }
             }
         }  
-        console.log("========================");
-        console.log(this.processTable);
-        console.log("========================");
-        console.log(this.currentJob);
-        console.log("========================");
+ 
         if(auxJobItr == this.currentJob){
             return "sleep";
         }

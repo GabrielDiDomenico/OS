@@ -56,9 +56,9 @@ var program3 = [
 ]
 
 var jobs = [
-    [program1, program1.length, 5, 5, 0, 0.5],
-    [program2, program2.length, 5, 5, 0, 0.5],
-    [program3, program3.length, 5, 5, 0, 0.5]
+    [program1, program1.length, 1, 1, 0, 0.5],
+    [program2, program2.length, 1, 1, 0, 0.5],
+    [program3, program3.length, 1, 1, 0, 0.5]
 ]
 
 console.log(jobs);
@@ -72,6 +72,7 @@ document.getElementById("showRegister").onclick = function() {$("#output").appen
 document.getElementById("showInstruction").onclick = function() {os.cpu.showInstructionMemory();}
 document.getElementById("showCurInstruction").onclick = function() {$("#output").append("<p>"+os.getLastLine()+"</p>");}
 document.getElementById("showData").onclick = function() {os.cpu.showDataMemory();}
+document.getElementById("showFiles").onclick = function() {os.showFiles();}
 document.getElementById("saveState").onclick = function() {os.cpu.saveState(arq);}
 document.getElementById("loadState").onclick = function() {if(file.length < 1) alert("Nothing to load");  else os.cpu.loadState(arq);}
 document.getElementById("reset").onclick = function() { location.reload();}

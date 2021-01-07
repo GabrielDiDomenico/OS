@@ -10,7 +10,7 @@ class OperatingSystem{
         this.files = files;
         this.fileItrs = Array(this.files.length)
         this.fileItrs.fill(0,0,this.files.length);
-        this.timer.setInterruption(1, 15, ["next",-1]);
+        this.timer.setInterruption(1, 15000, ["next",-1]);
         this.quantum = 0;
         this.maxQuantum = maxQuantum;
         this.sch = new Scheduler(jobs,files,this.fileItrs);
@@ -18,120 +18,122 @@ class OperatingSystem{
     }
 
     start(){
-        console.log(this.sch.processTable);
+        //alert(this.sch.processTable);
         if(this.cpu.instructionMemory[0]==undefined){
             this.cpu.loadProgram(this.jobs[0][0]);
         }
-        console.log(this.timer);
+
+        
+
         this.ctrlrReturn = this.controller.callCPU(this.cpu, this.timer, this.quantum);
-        console.log(this.ctrlrReturn[0][0]);
-        if(this.cpu.state == "Illegal instruction"){
-            if(this.ctrlrReturn[0][0].split(" ")[0] == "LE"){
-                console.log("entro0");
-                this.cpu.state = "sleep";
-                this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][2], ["LE "+this.ctrlrReturn[0][0].split(" ")[1],this.sch.currentJob]);
-                this.callScheduler();
-                this.quantum = 0;
-                this.start();
-            }else if(this.ctrlrReturn[0][0].split(" ")[0] == "GRAVA"){
-                this.cpu.state = "sleep";
-                this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][3], ["GRAVA "+this.ctrlrReturn[0][0].split(" ")[1],this.sch.currentJob]);
-                this.callScheduler();
-                this.quantum = 0;
-                this.start();
-            }else {
-                console.log("entro0");
-                this.output = this.cpu.state;
-            }
-        }else if(this.ctrlrReturn == "exit"){
-            console.log("entro1"); 
-            this.callScheduler();
-            this.quantum = 0;
-            if(this.output == "exit"){
-                console.log("terminou");
-            }else{
-                this.start();
-            }
-            
-        }else if(this.ctrlrReturn == "next"){
-            console.log("entro2");
-            this.cpu.state = "sleep";
-            this.callScheduler();
-            this.quantum = 0;
-            this.start();
-        }else if(this.ctrlrReturn == "next1"){
-            this.callScheduler();
-            
-            this.quantum = 0;
-            this.start();
-        }else if(this.ctrlrReturn == "force_exit"){
-            this.output = "exit";
+        alert(this.timer.timer);
+        alert(this.ctrlrReturn);
+        alert(this.sch.processTable);
+        if(this.ctrlrReturn == "force_exit"){
+            this.output = "force_exit";
         }else{
+            if(this.ctrlrReturn == "next_quantum" || this.ctrlrReturn == "next"){
+                this.callScheduler();
+                this.start();
+            }
+            if(this.cpu.state == "Illegal instruction"){
+                if(this.ctrlrReturn[0].split(" ")[0] == "LE"){
             
-            var aux = this.ctrlrReturn; // To be able to use split
-            console.log(aux[0][1]);
-            if(aux[0][0].split(" ")[0] == "LE"){
-                this.callScheduler(aux[0][1]);
-                console.log("entro3 - "+aux[0][1]);
-                this.quantum = 0;
-                this.readFile(this.files, aux[0][0].split(" ")[1]);
+                    this.cpu.state = "sleep";
+        
+                    this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][2], ["LE "+this.ctrlrReturn[0].split(" ")[1],this.sch.currentJob]);
+                    this.callScheduler();
+                    this.start();
+        
+                }
+                if(this.ctrlrReturn[0].split(" ")[0] == "GRAVA"){
+        
+                    this.cpu.state = "sleep";
+        
+                    this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][3], ["GRAVA "+this.ctrlrReturn[0].split(" ")[1],this.sch.currentJob]);
+                    this.callScheduler();
+                    this.start();
+                }
+            }
+            
+
+            if(this.ctrlrReturn[2][0].split(" ")[0] == "LE"){
+                this.cpu.state = "sleep";
+                this.callScheduler(this.ctrlrReturn[2][1]);
+                this.readFile(this.files,this.ctrlrReturn[2][0].split(" ")[1]);
                 this.start();
-            }else if(aux[0][0].split(" ")[0] == "GRAVA"){
-                console.log("entro4");
-                this.callScheduler(aux[0][1]);
-                this.quantum = 0;
-                this.writeFile(this.files, aux[0][0].split(" ")[1]);
+            }
+            if(this.ctrlrReturn[2][0].split(" ")[0] == "GRAVA"){
+                this.cpu.state = "sleep";
+                this.callScheduler(this.ctrlrReturn[2][1]);
+                this.writeFile(this.files,this.ctrlrReturn[2][0].split(" ")[1]);
                 this.start();
+            }
+    
+            
+            if(this.ctrlrReturn[0][0].split(" ")[0] == "Illegal instruction"){
+                this.output = "Illegal instruction";
             }
         }
+
         
         
         
     }
 
     callScheduler(idProcessInt=-1){
-        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        console.log(this.sch.processTable);
-        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
         let auxProc = [];
         var auxQuantum = 0;
         auxQuantum = this.quantum;
         this.quantum = 0;
         this.saveProcess(this.cpu.acc,this.cpu.pc,this.cpu.state,this.files,(Math.trunc((auxQuantum*100)/this.maxQuantum))*Math.pow(10,-2),this.fileItrs,this.cpu.dataMemory);
-        auxProc = this.sch.getProcess(idProcessInt);
         this.cpu.resetState();
+        auxProc = this.sch.getProcess(idProcessInt);
+       
+ 
         if(auxProc == "exit"){
             this.output = "exit";
         }else if(auxProc == "sleep"){
             this.cpu.state = "sleep";
-            console.log("entrortortortort")
+            
             this.start();
         }else{
+            
             this.loadProcess(auxProc);
         }
 
     }
 
     saveProcess(acc,pc,state,files,fracQuantum,fileItrs,dataMem){
-        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        console.log(this.sch.processTable);
-        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        this.sch.processTable[this.sch.currentJob][0] = parseInt(acc);
-        this.sch.processTable[this.sch.currentJob][1] = parseInt(pc);
+
+        let varQuantum = (this.sch.processTable[this.sch.currentJob][4][5]-fracQuantum)/2;
+
+        alert(parseInt(pc));
+        alert(parseInt(acc));
+        alert(state);
+        alert(files);
+        alert(varQuantum < 0.001 ? 0 : varQuantum);
+        alert(fileItrs);
+        alert(dataMem);
+
+        this.sch.processTable[this.sch.currentJob][0] = parseInt(pc);
+        this.sch.processTable[this.sch.currentJob][1] = parseInt(acc);
         this.sch.processTable[this.sch.currentJob][2] = state;
         this.sch.processTable[this.sch.currentJob][3] = files;
-        this.sch.processTable[this.sch.currentJob][4][5] = (this.sch.processTable[this.sch.currentJob][4][5]-fracQuantum)/2;
+        
+        this.sch.processTable[this.sch.currentJob][4][5] = varQuantum < 0.001 ? 0 : varQuantum;
         this.sch.processTable[this.sch.currentJob][5] = fileItrs;
         this.sch.processTable[this.sch.currentJob][6] = dataMem;
     }
 
     loadProcess(process){
-        this.cpu.loadState(process);
+        this.cpu.pc = process[0];
+        this.cpu.acc = process[1];
+        this.cpu.state = process[2];
         this.files = process[3];
         this.cpu.loadProgram(process[4][0]);
-        console.log(this.cpu.instructionMemory);
         this.fileItrs = process[5];
-        console.log(process[6]);
         this.cpu.dataMemory = process[6];
       
     }
@@ -156,6 +158,12 @@ class OperatingSystem{
 
     getOutput(){
         return this.output;
+    }
+
+    showFiles(){
+        for(let i=0;i<this.files.length;i++){
+            $("#output").append("<p>File "+i+": "+this.files[i]+"</p>");
+        }
     }
 
     getLastLine(){
