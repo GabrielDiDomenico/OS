@@ -4,74 +4,71 @@ class Scheduler{
         this.jobs = jobs;
         this.files = files;
         this.processTable = [];
-        this.currentJob = 0;
-
+        this.countExit = 0;
         for(let i=0;i<this.jobs.length;i++){
-            this.processTable.push([0,0,"normal",files,jobs[i],fileItrs, Array(50)]);
+            this.processTable.push([0,0,"normal",files,jobs[i],fileItrs, Array(50),i]);
         }
+        this.doneProcess = []
         console.log(this.processTable);
     }
 
     getProcess(idProcess){
-        if(idProcess>=0){
-      
-            if(this.processTable[idProcess][2]=="sleep"){
-                this.processTable[idProcess][2] = "normal";
+        
+        
+        this.sortTable();
+        if(this.processTable[0][2]=="exit"){
+            if(this.processTable.length==1){
+                return this.processTable[0];
             }
-            return this.processTable[idProcess];
-        }
-
-        var auxSleep=0;
-        for(let i=0;i<this.processTable.length;i++){
-            if(this.processTable[i][2] == "sleep"){
-                auxSleep++;
+            this.doneProcess.push(this.processTable[0]);
+            this.processTable.shift();
+            for(let i=0;i<this.processTable.length;i++){
+                this.processTable[i][7]--;
             }
+            this.sortTable();
         }
-        if(auxSleep.length == this.processTable.length){
-            return "sleep";
-        }
-        var auxJobItr = this.currentJob;
-        var endProgram=0;
+        
         for(let i=0;i<this.processTable.length;i++){
             
-            if(this.processTable[i][2] == "exit"){
-                endProgram++;
-                this.processTable[i][4][5] = 2;
+            if(idProcess>=0){
+                if(this.processTable[idProcess][2]=="sleep"){
+                    this.processTable[idProcess][2] = "normal";
+                }
+                return this.processTable[idProcess];
+            }
+            if(idProcess==-1){
+                if(this.processTable[0][2]=="sleep"){
+                    this.processTable[0][2] = "normal";
+                }
+                return this.processTable[0];
+            }
+            if(this.processTable[i][2]=="sleep"){
                 continue;
             }
-            if(this.processTable[i][2] == "sleep"){
-                
-                continue;
-            }
-            if(this.processTable[i][4][5] == 0){
-                this.currentJob = i;
-                break;
-            }
-            for(let j=0;j<this.processTable.length;j++){
-                if(this.processTable[j][2]=="sleep"){
-                    continue;
-                }
-                if(this.processTable[j][2]=="exit"){
-                    continue;
-                }
-                if(this.processTable[i][4][5] >= this.processTable[j][4][5]){
-                    this.currentJob = j;
-                }
-            }
-        }  
- 
-        if(auxJobItr == this.currentJob){
-            return "sleep";
+            
+          
+            return this.processTable[i];
         }
-
-        if(endProgram == this.processTable.length){
-            return "exit";
-        }
-     
-
-        return this.processTable[this.currentJob];
-
+      
+        return this.processTable[0];
     }
 
+    sortTable(){
+
+        var auxtable=[];
+        for(let i=0;i<this.processTable.length-1;i++){
+            
+            let min_idx = i;
+            for(let j=i+1;j<this.processTable.length;j++){
+                if(this.processTable[j][4][5] < this.processTable[min_idx][4][5]){
+                    min_idx = j; 
+                }
+            }
+            auxtable = this.processTable[min_idx];
+            this.processTable[min_idx] = this.processTable[i];
+            this.processTable[i] = auxtable;
+        }
+        
+    }
 
 }

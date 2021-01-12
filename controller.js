@@ -8,16 +8,17 @@ class Controller {
         
         while(true){
             cpu.run(1);
-
+        
+            timer.addTimer();
             if(quantum == this.mq){
                 return "next_quantum";
             }
-            if(timer.timer==300){
+            if(timer.timer==500){
                 return "force_exit";
             }
             
             var result;
-            timer.addTimer();
+            
             result = timer.showInterruption();
             
             if(result=="next"){   
@@ -34,7 +35,9 @@ class Controller {
             }
            
             if(cpu.state == "Illegal instruction"){
+                
                 if(cpu.getCurrentInstruction() == "PARA"){
+                    
                     return "exit";
                 }else if(cpu.getCurrentInstruction().split(" ")[0] == "LE"){
                     return ["LE "+cpu.getCurrentInstruction().split(" ")[1]];

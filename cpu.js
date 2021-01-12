@@ -96,7 +96,7 @@ class Cpu {
     }
 
     loadState(arq){
-        alert(arq)
+     
        this.pc = arq[0];
        this.acc = arq[1];
        this.state = arq[2];
@@ -108,7 +108,7 @@ class Cpu {
     }
 
     run(n=0){
-        console.log(this.getCurrentInstruction());
+        console.log(this.pc);
         var run = true;
         if(n<=0){
             while(run){
@@ -141,7 +141,7 @@ class Cpu {
                     return false;
                 }
             }
-
+            console.log(line);
             if(params.length == 2){
                 if(params[1] == ""){
                     this.illegalInstruction();

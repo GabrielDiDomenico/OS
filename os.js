@@ -8,40 +8,50 @@ class OperatingSystem{
         this.timer = new Timer(15);
         this.jobs = jobs;
         this.files = files;
-        this.fileItrs = Array(this.files.length)
+        this.fileItrs = Array(this.files.length);
         this.fileItrs.fill(0,0,this.files.length);
-        this.timer.setInterruption(1, 15000, ["next",-1]);
+        this.timer.setInterruption(1, 60, ["next",-1]);
         this.quantum = 0;
         this.maxQuantum = maxQuantum;
         this.sch = new Scheduler(jobs,files,this.fileItrs);
-        
+        this.currentJob = 0;
     }
+    
 
     start(){
-        //alert(this.sch.processTable);
+     
         if(this.cpu.instructionMemory[0]==undefined){
             this.cpu.loadProgram(this.jobs[0][0]);
         }
-
         
-
-        this.ctrlrReturn = this.controller.callCPU(this.cpu, this.timer, this.quantum);
-        alert(this.timer.timer);
-        alert(this.ctrlrReturn);
         alert(this.sch.processTable);
+        this.ctrlrReturn = this.controller.callCPU(this.cpu, this.timer, this.quantum);
+ 
         if(this.ctrlrReturn == "force_exit"){
             this.output = "force_exit";
+        }else if(this.ctrlrReturn == "exit"){
+           
+            this.cpu.state = "exit";
+            this.showResume();
+        
+            this.callScheduler();
+            
+            if(this.cpu.state == "exit"){
+                this.output = "Exit";
+                
+            }else{
+                this.start();
+            }
         }else{
             if(this.ctrlrReturn == "next_quantum" || this.ctrlrReturn == "next"){
-                this.callScheduler();
+                this.callScheduler(-1);
                 this.start();
             }
             if(this.cpu.state == "Illegal instruction"){
                 if(this.ctrlrReturn[0].split(" ")[0] == "LE"){
-            
+                    
                     this.cpu.state = "sleep";
-        
-                    this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][2], ["LE "+this.ctrlrReturn[0].split(" ")[1],this.sch.currentJob]);
+                    this.timer.setInterruption(0, this.timer.timer+this.jobs[this.currentJob][2], ["LE "+this.ctrlrReturn[0].split(" ")[1],this.currentJob]);
                     this.callScheduler();
                     this.start();
         
@@ -50,7 +60,7 @@ class OperatingSystem{
         
                     this.cpu.state = "sleep";
         
-                    this.timer.setInterruption(0, this.timer.timer+this.jobs[this.sch.currentJob][3], ["GRAVA "+this.ctrlrReturn[0].split(" ")[1],this.sch.currentJob]);
+                    this.timer.setInterruption(0, this.timer.timer+this.jobs[this.currentJob][3], ["GRAVA "+this.ctrlrReturn[0].split(" ")[1],this.currentJob]);
                     this.callScheduler();
                     this.start();
                 }
@@ -65,6 +75,7 @@ class OperatingSystem{
             }
             if(this.ctrlrReturn[2][0].split(" ")[0] == "GRAVA"){
                 this.cpu.state = "sleep";
+                
                 this.callScheduler(this.ctrlrReturn[2][1]);
                 this.writeFile(this.files,this.ctrlrReturn[2][0].split(" ")[1]);
                 this.start();
@@ -76,56 +87,46 @@ class OperatingSystem{
             }
         }
 
-        
-        
-        
+       
     }
 
-    callScheduler(idProcessInt=-1){
+    
 
+    callScheduler(idProcessInt=-2){
+        
         let auxProc = [];
         var auxQuantum = 0;
         auxQuantum = this.quantum;
         this.quantum = 0;
+
         this.saveProcess(this.cpu.acc,this.cpu.pc,this.cpu.state,this.files,(Math.trunc((auxQuantum*100)/this.maxQuantum))*Math.pow(10,-2),this.fileItrs,this.cpu.dataMemory);
         this.cpu.resetState();
+        this.files = [];
+        this.fileItrs = [];
         auxProc = this.sch.getProcess(idProcessInt);
-       
- 
-        if(auxProc == "exit"){
-            this.output = "exit";
-        }else if(auxProc == "sleep"){
-            this.cpu.state = "sleep";
-            
-            this.start();
-        }else{
-            
-            this.loadProcess(auxProc);
-        }
-
+        this.currentJob = auxProc[7];
+        this.loadProcess(auxProc);
+        
+        
     }
 
     saveProcess(acc,pc,state,files,fracQuantum,fileItrs,dataMem){
-
-        let varQuantum = (this.sch.processTable[this.sch.currentJob][4][5]-fracQuantum)/2;
-
-        alert(parseInt(pc));
-        alert(parseInt(acc));
-        alert(state);
-        alert(files);
-        alert(varQuantum < 0.001 ? 0 : varQuantum);
-        alert(fileItrs);
-        alert(dataMem);
-
-        this.sch.processTable[this.sch.currentJob][0] = parseInt(pc);
-        this.sch.processTable[this.sch.currentJob][1] = parseInt(acc);
-        this.sch.processTable[this.sch.currentJob][2] = state;
-        this.sch.processTable[this.sch.currentJob][3] = files;
         
-        this.sch.processTable[this.sch.currentJob][4][5] = varQuantum < 0.001 ? 0 : varQuantum;
-        this.sch.processTable[this.sch.currentJob][5] = fileItrs;
-        this.sch.processTable[this.sch.currentJob][6] = dataMem;
+        let varQuantum = (this.sch.processTable[this.currentJob][4][5]-fracQuantum)/2;
+     
+        this.sch.processTable[this.currentJob][0] = parseInt(pc);
+        this.sch.processTable[this.currentJob][1] = parseInt(acc);
+        this.sch.processTable[this.currentJob][2] = state;
+        this.sch.processTable[this.currentJob][3] = files;
+        
+        this.sch.processTable[this.currentJob][4][5] = varQuantum < 0.001 ? 0 : varQuantum;
+        this.sch.processTable[this.currentJob][5] = fileItrs;
+        this.sch.processTable[this.currentJob][6] = dataMem;
+
+        
     }
+
+    
 
     loadProcess(process){
         this.cpu.pc = process[0];
@@ -144,6 +145,7 @@ class OperatingSystem{
         }else{
             this.cpu.acc = file[n][this.fileItrs[n]];
             this.fileItrs[n] = this.fileItrs[n]+1;
+            
         }
         this.cpu.pc++;
         this.cpu.state = "normal";
@@ -152,6 +154,7 @@ class OperatingSystem{
     writeFile(file,n){
         file[n][this.fileItrs[n]] = this.cpu.acc;
         this.fileItrs[n] = this.fileItrs[n]+1;
+
         this.cpu.state = "normal";
         this.cpu.pc++;
     }
@@ -173,6 +176,13 @@ class OperatingSystem{
             return this.cpu.instructionMemory[this.cpu.pc];
         }
         
+    }
+
+    showResume(){
+        $("#output").append("<p>State: "+os.getOutput()+"</p>");
+        $("#output").append("<p>Accumulator: "+os.cpu.acc+"</p><p>PC: "+os.cpu.pc+"</p>");
+        this.showFiles();
+        this.cpu.showDataMemory();
     }
 
     

@@ -56,17 +56,22 @@ var program3 = [
 ]
 
 var jobs = [
-    [program1, program1.length, 1, 1, 0, 0.5],
-    [program2, program2.length, 1, 1, 0, 0.5],
-    [program3, program3.length, 1, 1, 0, 0.5]
+    [program2, program2.length, 4, 4, 0, 0.5],
+    [program1, program1.length, 4, 4, 0, 0.5],
+    [program3, program3.length, 4, 4, 0, 0.5]
+ 
 ]
 
 console.log(jobs);
 
 var files = [[10,20,30,0],[100,200,0],[0],[0],[0],[0]];
-var os = new OperatingSystem(50,jobs,files,30);
+var os = new OperatingSystem(50,jobs,files,3);
+// 3
+// 15
+// 30
 
 document.getElementById("run").onclick = function() {os.start();}
+document.getElementById("sort").onclick = function() {os.sort();}
 document.getElementById("showState").onclick = function() {$("#output").append("<p>State: "+os.getOutput()+"</p>");}
 document.getElementById("showRegister").onclick = function() {$("#output").append("<p>Accumulator: "+os.cpu.acc+"</p><p>PC: "+os.cpu.pc+"</p>");}
 document.getElementById("showInstruction").onclick = function() {os.cpu.showInstructionMemory();}
