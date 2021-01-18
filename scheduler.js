@@ -6,7 +6,7 @@ class Scheduler{
         this.processTable = [];
         this.countExit = 0;
         for(let i=0;i<this.jobs.length;i++){
-            this.processTable.push([0,0,"normal",files,jobs[i],fileItrs, Array(50),i]);
+            this.processTable.push([0,0,"normal",files[i],jobs[i],fileItrs[i], Array(50),i,i,0,0]);
         }
         this.doneProcess = []
         console.log(this.processTable);
@@ -26,6 +26,7 @@ class Scheduler{
                 this.processTable[i][7]--;
             }
             this.sortTable();
+            
         }
         
         for(let i=0;i<this.processTable.length;i++){
@@ -34,22 +35,24 @@ class Scheduler{
                 if(this.processTable[idProcess][2]=="sleep"){
                     this.processTable[idProcess][2] = "normal";
                 }
+                this.processTable[idProcess][9]++;
                 return this.processTable[idProcess];
             }
             if(idProcess==-1){
                 if(this.processTable[0][2]=="sleep"){
                     this.processTable[0][2] = "normal";
                 }
+                this.processTable[0][9]++;
                 return this.processTable[0];
             }
             if(this.processTable[i][2]=="sleep"){
                 continue;
             }
             
-          
+            this.processTable[i][9]++;
             return this.processTable[i];
         }
-      
+        this.processTable[0][9]++;
         return this.processTable[0];
     }
 

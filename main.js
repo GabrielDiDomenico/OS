@@ -54,19 +54,30 @@ var program3 = [
     "DESVZ 0",
     "PARA"
 ]
+var files1 = [[10,20,30,0],[100,200,0],[0],[0],[0],[0]];
+var fileItrs1 = Array(this.files1.length);
+fileItrs1.fill(0,0,this.files1.length);
+var files2 = [[10,20,30,0],[100,200,0],[0],[0],[0],[0]];
+var fileItrs2 = Array(this.files1.length);
+fileItrs2.fill(0,0,this.files1.length);
+var files3 = [[10,20,30,0],[100,200,0],[0],[0],[0],[0]];
+var fileItrs3 = Array(this.files1.length);
+fileItrs3.fill(0,0,this.files1.length);
+
+
 
 var jobs = [
-    [program2, program2.length, 4, 4, 0, 0.5],
-    [program1, program1.length, 4, 4, 0, 0.5],
-    [program3, program3.length, 4, 4, 0, 0.5]
+    [program2, program2.length, 4, 4, 0, 0.5, files2, fileItrs2],
+    [program1, program1.length, 4, 4, 0, 0.5, files1, fileItrs1],
+    [program3, program3.length, 4, 4, 0, 0.5, files3, fileItrs3]
  
 ]
 
 console.log(jobs);
 
-var files = [[10,20,30,0],[100,200,0],[0],[0],[0],[0]];
-var os = new OperatingSystem(50,jobs,files,3);
-// 3
+
+var os = new OperatingSystem(50,jobs,15);
+
 // 15
 // 30
 
